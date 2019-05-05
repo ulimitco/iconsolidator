@@ -1,0 +1,36 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div style="margin-bottom: 20px">
+            <input type="text" class="form-control" id="search" onkeyup="searchItem()" placeholder="Search items here" style="max-width: 100%" />
+        </div>
+        
+        <ul class="list-group" id="results">
+            
+        </ul>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        searchItem()
+    })
+
+    function searchItem() {
+        let search = $("#search").val();
+
+        $.get("/api/data", { search: search }, function (response) {
+
+            if (response.length > 0) {
+                let resultContent = "";
+
+                response.forEach(function (data, idx) {
+                    resultContent = resultContent + "<li class='list-group-item'><span class='badge'>" + data.Quantity + "</span>" + data.ItemName + "</li>";
+                });
+
+                $("#results").html(resultContent);
+            }
+
+
+        })
+    }
+</script>
