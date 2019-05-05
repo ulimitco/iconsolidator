@@ -7,6 +7,10 @@ using System.Web.Http;
 using System.Data.OleDb;
 using IConsolidator.Models;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace IConsolidator.Controllers
 {
@@ -19,6 +23,7 @@ namespace IConsolidator.Controllers
 
             int pageLength = 50;
             string search = "";
+            string sentDS = "";
 
             foreach (var parameter in Request.GetQueryNameValuePairs())
             {
@@ -29,10 +34,28 @@ namespace IConsolidator.Controllers
                 {
                     search = " WHERE UCASE(description) LIKE '%" + parameter.Value.ToUpper() + "%'";
                 }
+
+                if (key == "ds" && value != "")
+                {
+                    sentDS = value;
+                }
+            }
+         
+            StreamReader r = new StreamReader(System.Web.Hosting.HostingEnvironment.MapPath("~/Views/config.json"));
+            string json = r.ReadToEnd();
+            List<DBConfig> items = JsonConvert.DeserializeObject<List<DBConfig>>(json);
+
+            string chosenSrc = items[0].Path;
+
+            foreach (var item in items)
+            {
+                if(sentDS != "")
+                {
+                    chosenSrc = sentDS;
+                }
             }
 
-
-            OleDbConnection oleConn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=D:\recent.mdb");
+            OleDbConnection oleConn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + chosenSrc);
 
             string queryString = "SELECT TOP " + pageLength + " * FROM Stock" + search;
 
