@@ -73,6 +73,7 @@ namespace IConsolidator.Controllers
 
                 s.ID = int.Parse(reader["stock_id"].ToString());
                 s.ItemName = reader["description"].ToString();
+                s.SellPrice = double.Parse(reader["sell"].ToString()).ToString("#.##");
                 s.Quantity = int.Parse(reader["quantity"].ToString());
 
                 listStr.Add(s);
