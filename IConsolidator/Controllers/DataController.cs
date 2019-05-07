@@ -35,7 +35,7 @@ namespace IConsolidator.Controllers
                     search = " WHERE UCASE(description) LIKE '%" + parameter.Value.ToUpper() + "%'";
                 }
 
-                if (key == "ds" && value != "")
+                if (key == "src" && value != "")
                 {
                     sentDS = value;
                 }
@@ -54,6 +54,8 @@ namespace IConsolidator.Controllers
                     chosenSrc = sentDS;
                 }
             }
+
+            Debug.WriteLine(chosenSrc);
 
             OleDbConnection oleConn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + chosenSrc);
 
@@ -74,6 +76,7 @@ namespace IConsolidator.Controllers
                 s.ID = int.Parse(reader["stock_id"].ToString());
                 s.ItemName = reader["description"].ToString();
                 s.SellPrice = double.Parse(reader["sell"].ToString()).ToString("#.##");
+                s.CostPrice = double.Parse(reader["cost"].ToString()).ToString("#.##");
                 s.Quantity = int.Parse(reader["quantity"].ToString());
 
                 listStr.Add(s);

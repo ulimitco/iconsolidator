@@ -11,5 +11,6 @@ namespace IConsolidator.Models
         public string ItemName { get; set; }
         public int Quantity { get; set; }
         public string SellPrice { get; set; }
+        public string CostPrice { get; set; }
     }
 }

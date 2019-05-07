@@ -2,25 +2,35 @@
     <h3 style="margin-top: 0px; margin-bottom: 20px">Ihran Enterprises Data Consolidator</h3>
 </div>
 
+@model List<IConsolidator.Models.DBConfig>
+
 <div class="row">
     <div class="col-md-12">
         <div style="margin-bottom: 20px">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-2 col-xs-2">
                     <select class="form-control" onchange="searchItem()" id="src">
-                        @foreach(var co in ViewBag.Sources)
+                        @foreach(var co in Model)
                         {
-                            <option>@co</option>
+                            <option value="@co.Path">@co.Title</option>
                         }
                     </select>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10 col-xs-10">
                     <input type="text" class="form-control" id="search" onkeyup="searchItem()" placeholder="Search items here" style="max-width: 100%" />
                 </div>
             </div>
         </div>
 
-        <ul class="list-group" id="results"></ul>
+        <table class="table" id="myTable">
+            <thead>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Cost Price</th>
+            <th>Sell Price</th>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
@@ -38,10 +48,11 @@
                 let resultContent = "";
 
                 response.forEach(function (data, idx) {
-                    resultContent = resultContent + "<li class='list-group-item'><span class='badge'>" + data.Quantity + "</span>" + data.ItemName + "</li>";
+                    var price = data.SellPrice ? data.SellPrice : "0.00";
+                    resultContent = resultContent + "<tr><td>" + data.ItemName + "</td><td>" + data.Quantity + "</td><td>P " + price + "</td><td>P " + price + "</td></tr>";
                 });
 
-                $("#results").html(resultContent);
+                $("#myTable > tbody").html(resultContent);
             }
 
 
